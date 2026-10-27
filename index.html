@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0f5132">
+<meta name="robots" content="noindex">
+<title>Club Bakano · Mi tarjeta</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230f5132'/%3E%3Cpath d='M50 14l10.6 21.5 23.7 3.4-17.1 16.7 4 23.6L50 68 28.8 79.2l4-23.6L15.7 38.9l23.7-3.4z' fill='%23ffd23f'/%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%230f5132'/%3E%3Cpath d='M50 14l10.6 21.5 23.7 3.4-17.1 16.7 4 23.6L50 68 28.8 79.2l4-23.6L15.7 38.9l23.7-3.4z' fill='%23ffd23f'/%3E%3C/svg%3E">
+<style>
+  :root{
+    --verde:#0f5132; --verde2:#1a7f4b; --verde3:#2fbf71; --amarillo:#ffd23f; --oro:#f5b301;
+    --fondo:#0b2a1c; --tinta:#ffffff; --suave:rgba(255,255,255,.72); --linea:rgba(255,255,255,.14);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{
+    min-height:100vh; font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif; color:var(--tinta);
+    background:radial-gradient(120% 70% at 50% 0%,#1d6b45 0%,var(--fondo) 60%) fixed; background-color:var(--fondo);
+    display:flex; justify-content:center; padding:20px 16px 32px;
+  }
+  main{width:100%; max-width:420px}
+  .marca{display:flex; align-items:center; justify-content:center; gap:8px; font-weight:800; letter-spacing:.04em; color:var(--amarillo); font-size:14px; text-transform:uppercase; margin:4px 0 14px}
+  .tarjeta{
+    position:relative; overflow:hidden; border-radius:22px; padding:22px 20px 20px;
+    background:linear-gradient(145deg,var(--verde2) 0%,var(--verde) 55%,#0a3a24 100%);
+    box-shadow:0 18px 40px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.18);
+    border:1px solid rgba(255,210,63,.35);
+  }
+  .tarjeta::before{content:""; position:absolute; inset:-40% -30% auto auto; width:260px; height:260px; border-radius:50%;
+    background:radial-gradient(circle,rgba(255,210,63,.28),transparent 65%)}
+  .tarjeta::after{content:""; position:absolute; left:-20%; top:0; width:40%; height:100%; transform:skewX(-20deg);
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,.10),transparent); animation:brillo 4.5s ease-in-out infinite}
+  @keyframes brillo{0%,60%{left:-40%}100%{left:130%}}
+  .fila{display:flex; justify-content:space-between; align-items:flex-start; gap:12px; position:relative; z-index:1}
+  h1{margin:0; font-size:26px; line-height:1.1; font-weight:900; letter-spacing:.01em}
+  h1 .club{display:block; font-size:13px; font-weight:800; color:var(--amarillo); letter-spacing:.12em; margin-bottom:4px}
+  .estado{font-size:12px; font-weight:800; padding:6px 10px; border-radius:999px; white-space:nowrap; background:var(--amarillo); color:#3a2a00}
+  .estado.baja{background:rgba(255,255,255,.16); color:#fff}
+  .nombre{position:relative; z-index:1; margin:14px 0 2px; font-size:20px; font-weight:800}
+  .sub{position:relative; z-index:1; color:var(--suave); font-size:14px; margin:0}
+  .estrellas{position:relative; z-index:1; display:grid; grid-template-columns:repeat(var(--n,4),1fr); gap:10px; margin:20px 0 14px}
+  .estrella{aspect-ratio:1; border-radius:16px; display:grid; place-items:center; background:rgba(0,0,0,.18); border:1.5px dashed rgba(255,255,255,.28)}
+  .estrella svg{width:62%; height:62%}
+  .estrella.llena{background:radial-gradient(circle at 50% 40%,rgba(255,210,63,.35),rgba(0,0,0,.12)); border:1.5px solid rgba(255,210,63,.7)}
+  .estrella.llena svg path{fill:var(--amarillo); stroke:var(--oro)}
+  .estrella:not(.llena) svg path{fill:none; stroke:rgba(255,255,255,.35)}
+  .estrella.nueva{animation:pop .6s ease-out both}
+  @keyframes pop{0%{transform:scale(.4); opacity:0}70%{transform:scale(1.12)}100%{transform:scale(1); opacity:1}}
+  .mensaje{position:relative; z-index:1; font-size:16px; font-weight:700; margin:0 0 12px; line-height:1.35}
+  .mensaje b{color:var(--amarillo)}
+  .barra{position:relative; z-index:1; height:8px; border-radius:99px; background:rgba(0,0,0,.25); overflow:hidden}
+  .barra i{display:block; height:100%; width:0; border-radius:inherit; background:linear-gradient(90deg,var(--amarillo),var(--oro)); transition:width 1s ease}
+  .plazo{position:relative; z-index:1; display:flex; justify-content:space-between; color:var(--suave); font-size:12px; margin-top:6px}
+  .caja{margin-top:16px; border-radius:18px; padding:16px 18px; background:rgba(255,255,255,.06); border:1px solid var(--linea)}
+  .caja h2{margin:0 0 10px; font-size:15px; color:var(--amarillo); font-weight:800}
+  .regalo{display:flex; align-items:center; gap:12px}
+  .regalo .num{font-size:28px; font-weight:900; min-width:48px; text-align:center}
+  .regalo p{margin:0; color:var(--suave); font-size:14px; line-height:1.35}
+  .regalo p b{color:#fff}
+  ul{margin:0; padding:0; list-style:none; display:grid; gap:9px}
+  li{display:flex; gap:10px; align-items:flex-start; font-size:14px; line-height:1.35; color:var(--suave)}
+  li span:first-child{flex:none; width:22px; text-align:center}
+  li b{color:#fff}
+  .pie{text-align:center; color:rgba(255,255,255,.55); font-size:12px; margin-top:18px; line-height:1.6}
+  .aviso{text-align:center; padding:28px 18px}
+  .aviso p{color:var(--suave); line-height:1.45}
+  .cargando{opacity:.6}
+  @media (prefers-reduced-motion:reduce){.tarjeta::after,.estrella.nueva{animation:none}.barra i{transition:none}}
+</style>
+</head>
+<body>
+<main>
+  <div class="marca">★ Bakano Minimarket ★</div>
+  <div id="app" class="tarjeta cargando"><div class="aviso"><p>Cargando tu tarjeta…</p></div></div>
+  <div id="extra"></div>
+  <p class="pie">Bakano Minimarket · Belgrano 1264, Apóstoles<br><span id="act"></span></p>
+</main>
+<script>
+(function(){
+  var STAR = '<svg viewBox="0 0 24 24" aria-hidden="true"><path stroke-width="1.4" stroke-linejoin="round" d="M12 2.6l2.85 5.78 6.38.93-4.62 4.5 1.09 6.35L12 17.17l-5.7 2.99 1.09-6.35-4.62-4.5 6.38-.93z"/></svg>';
+  var app = document.getElementById('app'), extra = document.getElementById('extra'), act = document.getElementById('act');
+  function esc(t){ return String(t == null ? '' : t).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+  function cap(t){ t = String(t || ''); return t.charAt(0).toUpperCase() + t.slice(1); }
+  function fecha(iso){ var p = String(iso || '').split('-'); return p.length === 3 ? (p[2] + '/' + p[1]) : ''; }
+  function hoyAR(){ var d = new Date(Date.now() - 3 * 3600 * 1000); return d.toISOString().slice(0, 10); }
+  function dias(a, b){ return Math.round((Date.parse(b + 'T00:00:00Z') - Date.parse(a + 'T00:00:00Z')) / 86400000); }
+  function aviso(titulo, texto){
+    app.classList.remove('cargando');
+    app.innerHTML = '<div class="aviso"><h1><span class="club">CLUB BAKANO</span>' + esc(titulo) + '</h1><p>' + texto + '</p></div>';
+  }
+  function guardarToken(t){ try { localStorage.setItem('bakano_tarjeta', t); } catch (e) {} }
+  function leerToken(){ try { return localStorage.getItem('bakano_tarjeta') || ''; } catch (e) { return ''; } }
+
+  var token = decodeURIComponent((location.hash || '').replace(/^#/, '')).trim() || leerToken();
+  if (!token) { aviso('Mi tarjeta', 'Abrí el link que te mandamos por WhatsApp o Instagram para ver tus estrellas. ⭐'); return; }
+  if (location.hash.replace(/^#/, '') !== token) { try { history.replaceState(null, '', '#' + token); } catch (e) {} }
+  if (!(window.crypto && crypto.subtle)) { aviso('Mi tarjeta', 'Tu navegador es muy viejo para mostrar la tarjeta. Probá abrir el link en Chrome.'); return; }
+
+  crypto.subtle.digest('SHA-256', new TextEncoder().encode(token)).then(function(buf){
+    var h = Array.prototype.map.call(new Uint8Array(buf), function(x){ return ('0' + x.toString(16)).slice(-2); }).join('').slice(0, 20);
+    return fetch('tarjetas.json?v=' + Date.now(), {cache: 'no-store'}).then(function(r){ if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function(data){ mostrar(data, data.t && data.t[h]); });
+  }).catch(function(){
+    aviso('Mi tarjeta', 'No pude cargar la tarjeta. Revisá tu conexión y volvé a intentar en un ratito.');
+  });
+
+  function mostrar(data, s){
+    var R = data.reglas || {}, meta = +R.estrellas || 4, cada = +R.premio_cada || 0;
+    if (data.actualizado) act.textContent = 'Actualizado ' + fecha(data.actualizado.slice(0, 10)) + ' ' + data.actualizado.slice(11, 16);
+    if (!s) { aviso('Mi tarjeta', 'No encontramos esta tarjeta. Si recién te sumaste, puede tardar unos minutos en aparecer. Si no, pedinos el link de nuevo.'); return; }
+    guardarToken(token);
+    var socio = s.ok === 'socio', n = +s.e || 0, hoy = hoyAR();
+    var quedan = socio && s.hasta ? Math.max(0, dias(hoy, s.hasta)) : 0;
+    var vistas = 0; try { vistas = +(localStorage.getItem('bakano_vistas_' + (s.desde || '')) || 0); localStorage.setItem('bakano_vistas_' + (s.desde || ''), n); } catch (e) {}
+
+    var celdas = '';
+    for (var i = 0; i < meta; i++) {
+      var llena = i < n;
+      celdas += '<div class="estrella' + (llena ? ' llena' : '') + (llena && i >= vistas ? ' nueva' : '') + '" style="animation-delay:' + (i * 0.12) + 's">' + STAR + '</div>';
+    }
+    var msg;
+    if (!socio) msg = 'Este mes no llegaste a las ' + meta + ' ⭐. <b>¡Volvé cuando quieras!</b> Escribinos por Instagram y te sumamos de nuevo.';
+    else if (n >= meta) msg = '<b>¡Juntaste tus ' + meta + ' estrellas!</b> Seguís en el club el mes que viene' + (s.hasta ? ' (desde el ' + fecha(s.hasta) + ')' : '') + '.' + (n > meta ? ' Y vas ' + (n - meta) + ' de yapa 🙌' : '');
+    else {
+      var f = meta - n;
+      msg = 'Te ' + (f === 1 ? 'falta <b>1 estrella</b>' : 'faltan <b>' + f + ' estrellas</b>') + ' para seguir en el club' +
+            (quedan ? ': tenés <b>' + quedan + (quedan === 1 ? ' día' : ' días') + '</b>.' : '.');
+    }
+    var pct = socio && s.desde && s.hasta ? Math.min(100, Math.max(0, 100 * dias(s.desde, hoy) / Math.max(1, dias(s.desde, s.hasta)))) : 0;
+
+    app.classList.remove('cargando');
+    app.innerHTML =
+      '<div class="fila"><h1><span class="club">⭐ CLUB BAKANO ⭐</span>Mi tarjeta</h1>' +
+      '<span class="estado' + (socio ? '' : ' baja') + '">' + (socio ? 'SOCIO' : 'FUERA DEL CLUB') + '</span></div>' +
+      '<p class="nombre">' + esc(s.n) + '</p>' +
+      '<p class="sub">' + (socio ? 'Estrellas de este mes · ' + n + ' de ' + meta : 'Salió del club el ' + fecha(s.baja)) + '</p>' +
+      '<div class="estrellas" style="--n:' + meta + '">' + celdas + '</div>' +
+      '<p class="mensaje">' + msg + '</p>' +
+      (socio && s.desde ? '<div class="barra"><i id="barra"></i></div><div class="plazo"><span>Empezó el ' + fecha(s.desde) + '</span><span>Cierra el ' + fecha(s.hasta) + '</span></div>' : '');
+    if (socio) setTimeout(function(){ var b = document.getElementById('barra'); if (b) b.style.width = pct + '%'; }, 60);
+
+    var html = '';
+    if (socio && cada) {
+      var faltan = cada - ((+s.c || 0) % cada);
+      html += '<section class="caja"><h2>🎁 Tu próximo regalo</h2><div class="regalo"><div class="num">' + faltan + '</div>' +
+              '<p>' + (faltan === 1 ? 'compra' : 'compras') + ' más y te llevás <b>' + esc(R.premio || 'un regalo') + '</b> de regalo.</p></div></section>';
+    }
+    html += '<section class="caja"><h2>Beneficios del club</h2><ul>' +
+      (R.descuento ? '<li><span>💸</span><span><b>' + esc(R.descuento) + '% de descuento</b> en tus compras.</span></li>' : '') +
+      '<li><span>🔥</span><span><b>Promos exclusivas</b> en la historia de Mejores amigos de Instagram.</span></li>' +
+      (cada ? '<li><span>🎁</span><span><b>' + esc(cap(R.premio || 'un regalo')) + '</b> cada ' + cada + ' compras.</span></li>' : '') +
+      (R.regalo_cumple ? '<li><span>🎂</span><span><b>Regalo de cumple:</b> ' + esc(R.regalo_cumple) + '.</span></li>' : '') +
+      '<li><span>🎲</span><span><b>Sorteo todos los meses</b> entre los socios.</span></li>' +
+      '</ul></section>' +
+      '<section class="caja"><h2>¿Cómo sumo estrellas?</h2><ul>' +
+      '<li><span>⭐</span><span>Cada día que comprás en Bakano sumás <b>1 estrella</b>.</span></li>' +
+      '<li><span>🧾</span><span>Al pagar, decí tu nombre para que te carguen como cliente.</span></li>' +
+      '<li><span>📅</span><span>Juntá <b>' + meta + ' estrellas en ' + (R.dias || 30) + ' días</b> y seguís en el club otro mes.</span></li>' +
+      '<li><span>📲</span><span>Guardá esta página en tu inicio para tenerla a mano.</span></li>' +
+      '</ul></section>';
+    extra.innerHTML = html;
+  }
+})();
+</script>
+</body>
+</html>

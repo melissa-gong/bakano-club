@@ -1,0 +1,21 @@
+{
+ "actualizado": "2026-10-27T18:00-03:00",
+ "reglas": {
+  "estrellas": 4,
+  "dias": 30,
+  "descuento": 5,
+  "premio_cada": 10,
+  "premio": "una gaseosa",
+  "regalo_cumple": "un alfajor"
+ },
+ "t": {
+  "2a97516c354b68848cdb": {
+   "n": "Tarjeta de muestra",
+   "e": 2,
+   "c": 7,
+   "ok": "socio",
+   "desde": "2026-10-15",
+   "hasta": "2026-11-14"
+  }
+ }
+}
