@@ -1,12 +1,19 @@
 {
- "actualizado": "2026-10-27T18:00-03:00",
+ "actualizado": "2026-10-27T21:00-03:00",
  "reglas": {
-  "estrellas": 4,
+  "estrellas": 5,
   "dias": 30,
   "descuento": 5,
   "premio_cada": 10,
   "premio": "una gaseosa",
-  "regalo_cumple": "un alfajor"
+  "regalo_cumple": "un alfajor",
+  "beneficios": [
+   "5% de descuento en tus compras",
+   "Promos exclusivas en la historia de Mejores amigos",
+   "una gaseosa cada 10 compras",
+   "Regalo de cumple: un alfajor",
+   "Sorteo todos los meses entre los socios"
+  ]
  },
  "t": {
   "2a97516c354b68848cdb": {
