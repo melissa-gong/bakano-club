@@ -1,19 +1,48 @@
 {
- "actualizado": "2026-10-27T20:35-03:00",
+ "actualizado": "2026-10-27T23:18-03:00",
  "reglas": {
   "estrellas": 5,
   "dias": 30,
-  "descuento": 5,
-  "premio_cada": 10,
+  "reintegro": 8,
+  "reintegro_black": 12,
+  "umbral_black": 300000,
+  "minimo_estrella": 10000,
+  "premio_cada": 0,
   "premio": "una gaseosa",
-  "regalo_cumple": "un alfajor",
+  "regalo_cumple": "una merienda",
   "beneficios": [
-   "5% de descuento en tus compras",
-   "Promos exclusivas en la historia de Mejores amigos",
-   "una gaseosa cada 10 compras",
-   "Regalo de cumple: un alfajor",
-   "Sorteo todos los meses entre los socios"
-  ]
+   "8% de reintegro en saldo para tus próximas compras",
+   "10 Bakanos por semana para canjear por premios",
+   "Regalo de cumple",
+   "Promos exclusivas en la historia de Mejores amigos"
+  ],
+  "beneficios_black": [
+   "12% de reintegro en saldo para tus próximas compras",
+   "100 Bakanos por semana para canjear por meriendas, pizza y más",
+   "Súper regalo de cumple",
+   "Promos exclusivas en la historia de Mejores amigos"
+  ],
+  "bakanos_semana": 10,
+  "bakanos_semana_black": 100,
+  "canjes": [
+   [
+    30,
+    "Alfajor o golosina"
+   ],
+   [
+    60,
+    "Gaseosa 1,5 L"
+   ],
+   [
+    100,
+    "Merienda"
+   ],
+   [
+    400,
+    "Pizza con gaseosa"
+   ]
+  ],
+  "alcohol_caro": 20000
  },
  "t": {
   "60ffeb59f40d84267e55": {
@@ -22,7 +51,13 @@
    "c": 1,
    "desde": "2026-10-27",
    "hasta": "2026-11-26",
-   "ok": "socio"
+   "ok": "socio",
+   "tipo": "green",
+   "g": 0,
+   "ah": 0,
+   "sd": 0,
+   "ahm": 0,
+   "bk": 0
   },
   "f437f14e88f26b24b35f": {
    "n": "Dilan P.",
@@ -30,15 +65,42 @@
    "c": 1,
    "desde": "2026-10-27",
    "hasta": "2026-11-26",
-   "ok": "socio"
+   "ok": "socio",
+   "tipo": "green",
+   "g": 0,
+   "ah": 0,
+   "sd": 0,
+   "ahm": 0,
+   "bk": 0
   },
   "2a97516c354b68848cdb": {
    "n": "Tarjeta de muestra",
    "e": 2,
    "c": 7,
    "ok": "socio",
+   "tipo": "green",
+   "g": 84500,
+   "ah": 0,
+   "ahm": 0,
+   "sd": 5960,
+   "bk": 30,
    "desde": "2026-10-15",
    "hasta": "2026-11-14"
+  },
+  "511e5ba091e5273190b2": {
+   "n": "Tarjeta Black de muestra",
+   "e": 5,
+   "c": 14,
+   "ok": "socio",
+   "tipo": "black",
+   "g": 342000,
+   "ah": 41040,
+   "ahm": 12480,
+   "sd": 12480,
+   "bk": 340,
+   "desde": "2026-10-15",
+   "hasta": "2026-11-14",
+   "bh": "2026-12-14"
   }
  }
 }
