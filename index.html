@@ -72,6 +72,15 @@
   .ahorro .grande{font-size:30px; font-weight:900; color:var(--acento2)}
   .ahorro span{color:var(--suave); font-size:14px}
   .vence .sdo{color:#fff; font-size:3cqw}
+  .canjes{margin-top:12px}
+  .canjes li{font-size:14px}
+  .canjes li small{color:var(--suave)}
+  .canjes li:not(.ok){opacity:.65}
+  .tyc{margin:6px 4px 0; color:rgba(255,255,255,.45); font-size:10.5px; line-height:1.5}
+  .tyc summary{cursor:pointer; text-align:center; list-style:none; text-decoration:underline; font-size:11px}
+  .tyc summary::-webkit-details-marker{display:none}
+  .tyc ol{padding-left:16px; margin:8px 0 0}
+  .tyc li{display:list-item; font-size:10.5px; color:rgba(255,255,255,.5); margin:0 0 4px; gap:0}
   .mini{color:var(--suave); font-size:13px; margin:8px 0 0; line-height:1.4}
   .mini b{color:#fff}
   .caja .barra{margin-top:10px}
@@ -136,6 +145,7 @@
   <div id="app" class="tarjeta"><div class="aviso"><p>Cargando tu tarjeta…</p></div></div>
   <div id="extra"></div>
   <p class="pie">Bakano Minimarket · Belgrano 1264, Apóstoles<br><span id="act"></span></p>
+  <details class="tyc"><summary>Términos y condiciones</summary><div id="tyc"></div></details>
 </main>
 <script>
 /* QR Code Generator for JavaScript · Copyright (c) 2009 Kazuhiko Arase · MIT license */
@@ -200,6 +210,8 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
   }
   function formulario(){
     app.className = ''; extra.innerHTML = '';
+    fetch('tarjetas.json?v=' + Date.now(), {cache: 'no-store'}).then(function(r){ return r.json(); })
+      .then(function(d){ terminos(d.reglas || {}); }).catch(function(){ terminos({}); });
     var previo = leerToken();
     app.innerHTML = '<form class="alta" id="f" novalidate>' +
       '<img alt="Bakano Minimarket" src="' + LOGO + '">' +
@@ -243,8 +255,26 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     return b;
   }
 
+  function terminos(R){
+    var el = document.getElementById('tyc'); if (!el) return;
+    var p = function(x){ return plata(x); };
+    var L = [
+      'El Club Bakano es un programa de beneficios gratuito de Bakano Minimarket (Belgrano 1264, Apóstoles). Para participar hay que anotarse en esta página y activar la tarjeta en una compra en el local.',
+      'Reintegro: se acredita como saldo a favor un ' + (R.reintegro || 8) + '% (tarjeta Green) o un ' + (R.reintegro_black || 12) + '% (tarjeta Black) de lo efectivamente pagado, sin contar cigarrillos y tabaco, productos importados ni bebidas alcohólicas de precio igual o mayor a ' + p(R.alcohol_caro || 20000) + '. El saldo se usa solo en compras en Bakano, no se canjea por dinero ni se transfiere.',
+      'Para que una compra cuente hay que mostrar la tarjeta (código QR) al pagar. Las compras no registradas en el momento no se cargan después.',
+      'Estrellas: se suma 1 estrella por día con compras desde ' + p(R.minimo_estrella || 10000) + '. Para seguir en el club hay que juntar ' + (R.estrellas || 5) + ' estrellas en cada período de ' + (R.dias || 30) + ' días desde el alta; quien no las junta sale del club y puede volver a anotarse. Los socios Black siguen en el club aunque no junten las estrellas.',
+      'Tarjeta Black: se obtiene con compras por más de ' + p(R.umbral_black || 300000) + ' dentro del período de ' + (R.dias || 30) + ' días, y dura ese período y el siguiente. Si en el siguiente vuelve a superar ese monto, se renueva; si no, la tarjeta vuelve a Green.',
+      'Bakanos: se acreditan ' + (R.bakanos_semana || 10) + ' (Green) o ' + (R.bakanos_semana_black || 100) + ' (Black) con la primera compra de cada semana. Se canjean por los premios vigentes según disponibilidad, no tienen valor en dinero y se conservan mientras se sea socio, también al pasar de Black a Green.',
+      'Regalo de cumpleaños: se entrega presentando la tarjeta el día del cumpleaños o dentro de los 7 días siguientes, según disponibilidad.',
+      'Los beneficios no son acumulables con otras promociones salvo indicación en contrario. Bakano Minimarket puede modificar o dar por terminado el programa, sus beneficios y estas condiciones, publicándolo en esta página.',
+      'Los datos que cargás (nombre, cumpleaños e Instagram) se usan solo para el club y no se comparten con terceros.'
+    ];
+    el.innerHTML = '<ol>' + L.map(function(x){ return '<li>' + esc(x) + '</li>'; }).join('') + '</ol>';
+  }
+
   function mostrar(data, s){
     var R = data.reglas || {}, meta = +R.estrellas || 5, cada = +R.premio_cada || 0;
+    terminos(R);
     if (data.actualizado) act.textContent = 'Datos actualizados el ' + fecha(data.actualizado.slice(0, 10)) + ' a las ' + data.actualizado.slice(11, 16);
     var socio = !!s && s.ok === 'socio', n = s ? (+s.e || 0) : 0, hoy = hoyAR();
 
@@ -270,7 +300,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
         '<div class="nombre">' + esc(s.n) + '</div>' +
         '<span class="estado' + (socio ? '' : ' baja') + '">' + (socio ? (black ? 'SOCIO BLACK' : 'SOCIO GREEN') : 'FUERA DEL CLUB') + '</span>' +
         '<div class="estrellas" aria-label="' + n + ' de ' + meta + ' estrellas">' + est + '</div>' +
-        '<div class="vence">' + (socio ? 'Saldo a favor <b class="sdo">' + plata(s.sd) + '</b> · ' + (black && s.bh ? 'Black hasta el ' + fecha(s.bh) : 'estrellas hasta el ' + fecha(s.hasta)) : (s.baja ? 'Salió del club el ' + fecha(s.baja) : '')) + '</div>' +
+        '<div class="vence">' + (socio ? 'Saldo <b class="sdo">' + plata(s.sd) + '</b> · 🪙 <b class="sdo">' + (+s.bk || 0) + '</b> · ' + (black && s.bh ? 'Black hasta el ' + fecha(s.bh) : 'estrellas hasta el ' + fecha(s.hasta)) : (s.baja ? 'Salió del club el ' + fecha(s.baja) : '')) + '</div>' +
       '</div>' +
       '<div class="der"><div class="qr">' + qrSvg(linkQR) + '</div><div class="qr-txt">Mostralo al pagar</div></div>';
 
@@ -298,28 +328,34 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
               '<p class="mini">Este mes: <b>' + plata(s.ahm) + '</b> · llevás <b>' + plata(s.g) + '</b> en compras</p>' +
               (umbral ? '<p class="mini">' + (+s.g >= umbral ? '✅ Ya superaste ' + plata(umbral) + ': <b>seguís en Black el mes que viene</b>.'
                        : 'Superá <b>' + plata(umbral) + '</b> este mes (te faltan ' + plata(umbral - s.g) + ') para seguir en Black.') + '</p>' : '') +
-              '</section>' +
-              '<section class="caja"><h2>🍰 Tu merienda de la semana</h2><p class="mini" style="margin:0">' +
-              (s.mer ? '<b>Disponible</b>: pedila al pagar y mostrá tu tarjeta.' : 'Ya la usaste esta semana. <b>El lunes</b> tenés otra.') + '</p></section>';
+              '</section>';
     } else if (socio && umbral) {
       var pg = Math.min(100, 100 * (+s.g || 0) / umbral);
       html += '<section class="caja"><h2>🖤 Camino a la Black</h2>' +
               '<p class="mini" style="margin:0">Llevás <b>' + plata(s.g) + '</b> en compras este mes. ' +
               (+s.g >= umbral ? '<b>¡Pasaste a la Black!</b>' : 'Te faltan <b>' + plata(umbral - s.g) + '</b> para pasar a la tarjeta Black.') + '</p>' +
               '<div class="barra"><i id="barra2"></i></div>' +
-              '<p class="mini">Con la Black: <b>' + esc(R.reintegro_black || 12) + '% de reintegro</b>, un café con 2 medialunas gratis por semana y súper regalo de cumple.</p></section>';
+              '<p class="mini">Con la Black: <b>' + esc(R.reintegro_black || 12) + '% de reintegro</b>, ' + esc(R.bakanos_semana_black || 100) + ' Bakanos por semana y súper regalo de cumple.</p></section>';
       setTimeout(function(){ var b2 = document.getElementById('barra2'); if (b2) b2.style.width = pg + '%'; }, 60);
     }
-    if (socio && cada) {
-      var faltan = cada - ((+s.c || 0) % cada);
-      html += '<section class="caja"><h2>🎁 Tu próximo regalo</h2><div class="regalo"><div class="num">' + faltan + '</div>' +
-              '<p>' + (faltan === 1 ? 'compra' : 'compras') + ' más y te llevás <b>' + esc(R.premio || 'un regalo') + '</b> de regalo.</p></div></section>';
+    if (socio) {
+      var bk = +s.bk || 0, canjes = Array.isArray(R.canjes) ? R.canjes : [];
+      html += '<section class="caja"><h2>🪙 Tus Bakanos</h2><div class="ahorro"><div class="grande">' + bk + '</div>' +
+              '<span>Bakanos para canjear</span></div>' +
+              '<p class="mini">Ganás <b>' + esc(black ? (R.bakanos_semana_black || 100) : (R.bakanos_semana || 10)) + ' Bakanos</b> con tu primera compra de cada semana. ' +
+              'Los podés usar o juntar: no se pierden si pasás de Black a Green.</p>' +
+              (canjes.length ? '<ul class="canjes">' + canjes.map(function(x){
+                var ok = bk >= +x[0];
+                return '<li class="' + (ok ? 'ok' : '') + '"><span>' + (ok ? '✅' : '🔒') + '</span><span><b>' + esc(x[1]) + '</b> · ' + esc(x[0]) + ' Bakanos' +
+                       (ok ? '' : ' <small>(te faltan ' + (+x[0] - bk) + ')</small>') + '</span></li>';
+              }).join('') + '</ul><p class="mini">Para canjear, pedíselo al cajero cuando escanea tu tarjeta.</p>' : '') +
+              '</section>';
     }
     html += '<section class="caja"><h2>Beneficios de tu tarjeta ' + (black ? 'Black' : 'Green') + '</h2><ul>' +
       beneficios(R, black).map(function(b){ return '<li><span class="pt">' + STAR + '</span><span>' + esc(cap(b)) + '</span></li>'; }).join('') + '</ul>' +
       '<p class="mini">El reintegro no incluye cigarrillos, importados ni alcohol caro.</p></section>' +
       '<section class="caja"><h2>¿Cómo sumo estrellas?</h2><ul>' +
-      '<li><span>📷</span><span>Al pagar, <b>mostrá el QR</b> de tu tarjeta: el cajero lo escanea y sumás la compra y el reintegro.</span></li>' +
+      '<li><span>📷</span><span>Al pagar, <b>mostrá el QR</b> de tu tarjeta: el cajero lo escanea y anota la compra con tu código.</span></li>' +
       '<li><span class="pt">' + STAR + '</span><span>Cada día que comprás' + (R.minimo_estrella ? ' desde <b>' + plata(R.minimo_estrella) + '</b>' : '') + ' sumás <b>1 estrella</b>.</span></li>' +
       '<li><span>📅</span><span>Juntá <b>' + meta + ' estrellas en ' + (R.dias || 30) + ' días</b> y seguís en el club otro mes.</span></li>' +
       '<li><span>📲</span><span>Guardá esta página en tu inicio para tenerla a mano.</span></li>' +
