@@ -71,6 +71,7 @@
   .ahorro{display:flex; align-items:baseline; gap:10px; flex-wrap:wrap}
   .ahorro .grande{font-size:30px; font-weight:900; color:var(--acento2)}
   .ahorro span{color:var(--suave); font-size:14px}
+  .vence .sdo{color:#fff; font-size:3cqw}
   .mini{color:var(--suave); font-size:13px; margin:8px 0 0; line-height:1.4}
   .mini b{color:#fff}
   .caja .barra{margin-top:10px}
@@ -203,7 +204,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     app.innerHTML = '<form class="alta" id="f" novalidate>' +
       '<img alt="Bakano Minimarket" src="' + LOGO + '">' +
       '<h1>Sumate al Club Bakano ⭐</h1>' +
-      '<p class="intro">Descuentos, promos exclusivas, premios y regalo de cumple. Completá tus datos y listo: tu tarjeta queda en tu celular.</p>' +
+      '<p class="intro">Reintegro en saldo en cada compra, promos exclusivas y regalo de cumple. Completá tus datos y listo: tu tarjeta queda en tu celular.</p>' +
       '<label for="n">Nombre y apellido</label><input id="n" autocomplete="name" maxlength="40" placeholder="Ej: Juan Pérez" required>' +
       '<div class="fila2"><div><label for="c">Cumple (día/mes)</label><input id="c" inputmode="numeric" maxlength="5" placeholder="12/05"></div>' +
       '<div><label for="i">Instagram</label><input id="i" autocapitalize="none" maxlength="30" placeholder="@usuario"></div></div>' +
@@ -234,10 +235,10 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     var L = black ? R.beneficios_black : R.beneficios;
     if (Array.isArray(L) && L.length) return L;
     var b = [];
-    if (R.descuento) b.push(R.descuento + '% de descuento en tus compras');
+    if (R.reintegro) b.push(R.reintegro + '% de reintegro en saldo para tus próximas compras');
     b.push('Promos exclusivas en la historia de Mejores amigos');
     if (R.premio_cada) b.push(cap(R.premio || 'un regalo') + ' cada ' + R.premio_cada + ' compras');
-    if (R.regalo_cumple) b.push('Regalo de cumple: ' + R.regalo_cumple);
+    b.push('Regalo de cumple');
     b.push('Sorteo todos los meses entre los socios');
     return b;
   }
@@ -269,7 +270,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
         '<div class="nombre">' + esc(s.n) + '</div>' +
         '<span class="estado' + (socio ? '' : ' baja') + '">' + (socio ? (black ? 'SOCIO BLACK' : 'SOCIO GREEN') : 'FUERA DEL CLUB') + '</span>' +
         '<div class="estrellas" aria-label="' + n + ' de ' + meta + ' estrellas">' + est + '</div>' +
-        '<div class="vence">' + (black && s.bh ? 'Black hasta el ' + fecha(s.bh) + ' · estrellas del mes' : (socio && s.hasta ? 'Estrellas del mes · cierra el ' + fecha(s.hasta) : (s.baja ? 'Salió del club el ' + fecha(s.baja) : ''))) + '</div>' +
+        '<div class="vence">' + (socio ? 'Saldo a favor <b class="sdo">' + plata(s.sd) + '</b> · ' + (black && s.bh ? 'Black hasta el ' + fecha(s.bh) : 'estrellas hasta el ' + fecha(s.hasta)) : (s.baja ? 'Salió del club el ' + fecha(s.baja) : '')) + '</div>' +
       '</div>' +
       '<div class="der"><div class="qr">' + qrSvg(linkQR) + '</div><div class="qr-txt">Mostralo al pagar</div></div>';
 
@@ -285,9 +286,15 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     var html = '<p class="mensaje">' + msg + '</p>';
     if (socio && s.desde) html += '<div class="barra"><i id="barra"></i></div><div class="plazo"><span>Empezó el ' + fecha(s.desde) + '</span><span>Cierra el ' + fecha(s.hasta) + '</span></div>';
     var umbral = +R.umbral_black || 0;
+    if (socio) {
+      html += '<section class="caja"><h2>💳 Tu saldo a favor</h2><div class="ahorro"><div class="grande">' + plata(s.sd) + '</div>' +
+              '<span>para usar en tu próxima compra</span></div>' +
+              '<p class="mini">Cada compra te devuelve el <b>' + esc(black ? (R.reintegro_black || 12) : (R.reintegro || 8)) + '%</b> en saldo. ' +
+              'Para usarlo, avisale al cajero cuando pagás.</p></section>';
+    }
     if (black) {
       html += '<section class="caja"><h2>🖤 Tu ahorro con la Black</h2><div class="ahorro"><div class="grande">' + plata(s.ah) + '</div>' +
-              '<span>ahorrados en total</span></div>' +
+              '<span>de reintegro ganado con la Black</span></div>' +
               '<p class="mini">Este mes: <b>' + plata(s.ahm) + '</b> · llevás <b>' + plata(s.g) + '</b> en compras</p>' +
               (umbral ? '<p class="mini">' + (+s.g >= umbral ? '✅ Ya superaste ' + plata(umbral) + ': <b>seguís en Black el mes que viene</b>.'
                        : 'Superá <b>' + plata(umbral) + '</b> este mes (te faltan ' + plata(umbral - s.g) + ') para seguir en Black.') + '</p>' : '') +
@@ -300,7 +307,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
               '<p class="mini" style="margin:0">Llevás <b>' + plata(s.g) + '</b> en compras este mes. ' +
               (+s.g >= umbral ? '<b>¡Pasaste a la Black!</b>' : 'Te faltan <b>' + plata(umbral - s.g) + '</b> para pasar a la tarjeta Black.') + '</p>' +
               '<div class="barra"><i id="barra2"></i></div>' +
-              '<p class="mini">Con la Black: <b>' + esc(R.descuento_black || 15) + '% de descuento</b>, una merienda gratis por semana y súper regalo de cumple.</p></section>';
+              '<p class="mini">Con la Black: <b>' + esc(R.reintegro_black || 12) + '% de reintegro</b>, un café con 2 medialunas gratis por semana y súper regalo de cumple.</p></section>';
       setTimeout(function(){ var b2 = document.getElementById('barra2'); if (b2) b2.style.width = pg + '%'; }, 60);
     }
     if (socio && cada) {
@@ -309,9 +316,10 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
               '<p>' + (faltan === 1 ? 'compra' : 'compras') + ' más y te llevás <b>' + esc(R.premio || 'un regalo') + '</b> de regalo.</p></div></section>';
     }
     html += '<section class="caja"><h2>Beneficios de tu tarjeta ' + (black ? 'Black' : 'Green') + '</h2><ul>' +
-      beneficios(R, black).map(function(b){ return '<li><span class="pt">' + STAR + '</span><span>' + esc(cap(b)) + '</span></li>'; }).join('') + '</ul></section>' +
+      beneficios(R, black).map(function(b){ return '<li><span class="pt">' + STAR + '</span><span>' + esc(cap(b)) + '</span></li>'; }).join('') + '</ul>' +
+      '<p class="mini">El reintegro no incluye cigarrillos, importados ni alcohol caro.</p></section>' +
       '<section class="caja"><h2>¿Cómo sumo estrellas?</h2><ul>' +
-      '<li><span>📷</span><span>Al pagar, <b>mostrá el QR</b> de tu tarjeta: el cajero lo escanea y sumás la compra.</span></li>' +
+      '<li><span>📷</span><span>Al pagar, <b>mostrá el QR</b> de tu tarjeta: el cajero lo escanea y sumás la compra y el reintegro.</span></li>' +
       '<li><span class="pt">' + STAR + '</span><span>Cada día que comprás' + (R.minimo_estrella ? ' desde <b>' + plata(R.minimo_estrella) + '</b>' : '') + ' sumás <b>1 estrella</b>.</span></li>' +
       '<li><span>📅</span><span>Juntá <b>' + meta + ' estrellas en ' + (R.dias || 30) + ' días</b> y seguís en el club otro mes.</span></li>' +
       '<li><span>📲</span><span>Guardá esta página en tu inicio para tenerla a mano.</span></li>' +
@@ -347,8 +355,8 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
   function mostrarVerificacion(R, s, socio, n, meta){
     document.title = 'Club Bakano · Verificación';
     var t = !s ? ['no', '⛔', 'TARJETA NO VÁLIDA', '', 'Este código no corresponde a ningún socio.']
-          : socio ? ['ok', '✅', 'SOCIO ACTIVO', s.n, (R.descuento ? 'Tiene <b>' + esc(R.descuento) + '% de descuento</b>. ' : '') + 'Estrellas del mes: ' + n + ' de ' + meta + '.']
-          : ['no', '⛔', 'NO ES SOCIO', s.n, 'Salió del club' + (s.baja ? ' el ' + fecha(s.baja) : '') + '. No corresponde el descuento.'];
+          : socio ? ['ok', '✅', 'SOCIO ACTIVO', s.n, (R.reintegro ? 'Tiene <b>' + esc(R.reintegro) + '% de reintegro</b>. ' : '') + 'Estrellas del mes: ' + n + ' de ' + meta + '.']
+          : ['no', '⛔', 'NO ES SOCIO', s.n, 'Salió del club' + (s.baja ? ' el ' + fecha(s.baja) : '') + '. No corresponde reintegro.'];
     verifBox.innerHTML = '<div class="verif ' + t[0] + '"><div class="icono">' + t[1] + '</div><h1>' + t[2] + '</h1>' +
       (t[3] ? '<div class="quien">' + esc(t[3]) + '</div>' : '') + '<p class="det">' + t[4] + '</p>' +
       '<div class="reloj"><i></i><span id="reloj"></span></div>' +
