@@ -1,5 +1,5 @@
 {
- "actualizado": "2026-11-26T01:23-03:00",
+ "actualizado": "2026-11-26T09:00-03:00",
  "reglas": {
   "estrellas": 5,
   "dias": 30,
@@ -49,29 +49,15 @@
    "n": "Melissa G.",
    "e": 1,
    "c": 1,
-   "desde": "2026-10-27",
-   "hasta": "2026-11-26",
-   "ok": "socio",
-   "tipo": "green",
-   "g": 0,
-   "ah": 0,
-   "sd": 0,
-   "ahm": 0,
-   "bk": 0
+   "ok": "baja",
+   "baja": "2026-11-26"
   },
   "f437f14e88f26b24b35f": {
    "n": "Dilan P.",
    "e": 1,
    "c": 1,
-   "desde": "2026-10-27",
-   "hasta": "2026-11-26",
-   "ok": "socio",
-   "tipo": "green",
-   "g": 0,
-   "ah": 0,
-   "sd": 0,
-   "ahm": 0,
-   "bk": 0
+   "ok": "baja",
+   "baja": "2026-11-26"
   },
   "3acdb2429cff638963d5": {
    "n": "Tomás M.",
