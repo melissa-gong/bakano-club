@@ -1,5 +1,5 @@
 {
- "actualizado": "2026-11-28T01:47-03:00",
+ "actualizado": "2026-11-28T09:00-03:00",
  "reglas": {
   "estrellas": 5,
   "dias": 30,
@@ -63,15 +63,8 @@
    "n": "Tomás M.",
    "e": 0,
    "c": 0,
-   "desde": "2026-10-29",
-   "hasta": "2026-11-28",
-   "ok": "socio",
-   "tipo": "green",
-   "g": 0,
-   "ah": 0,
-   "sd": 0,
-   "ahm": 0,
-   "bk": 0
+   "ok": "baja",
+   "baja": "2026-11-28"
   },
   "2a97516c354b68848cdb": {
    "n": "Tarjeta de muestra",
